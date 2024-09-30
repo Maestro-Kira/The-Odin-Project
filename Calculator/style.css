@@ -14,15 +14,15 @@ body {
     height: 100vh;
     overflow: hidden;
     margin: 0;
-    background-color: #0b0b0b; /* Very Dark Gray */
+    background-color: #0b0b0b;
 }
 
 h1 {
-    color: #ff2a68; /* Neon Pink */
+    color: #ff2a68;
 }
 
 .calculator-container {
-    background-color: #1f1f1f; /* Dark Charcoal Gray */
+    background-color: #1f1f1f;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -30,14 +30,16 @@ h1 {
 }
 
 .numbers-display {
-    background-color: #4a0000; /* Dark Red */
-    border: 6px solid #ff2a68; /* Neon Pink */
+    background-color: #4a0000;
+    border: 6px solid #ff2a68;
     display: flex;
     justify-content: end;
     align-items: center;
     font-size: 80px;
     height: 100px;
-    color: #f0f0f0; /* Light Gray for contrast */
+    color: #f0f0f0;
+    border-top-left-radius: 10px; /* Round top left corner */
+    border-top-right-radius: 10px; /* Round top right corner */
 }
 
 .btn-grid {
@@ -45,8 +47,12 @@ h1 {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
     gap: 2px;
-    background-color: #000000; /* Black */
+    background-color: #000000;
     padding: 2px;
+    border-bottom-left-radius: 10px; /* Round top left corner */
+    border-bottom-right-radius: 10px; /* Round top right corner */
+    border: 6px solid #ff2a68;
+
 }
 
 .btn {
@@ -54,24 +60,24 @@ h1 {
     justify-content: center;
     align-items: center;
     padding: 25px;
-    border: 1px solid #3e3e3e; /* Darker Gray */
+    border: 1px solid #3e3e3e;
     border-radius: 4px;
     font-size: 30px;
     transition: background-color 0.2s ease, filter 0.2s ease;
     user-select: none;
     cursor: pointer;
-    color: #f0f0f0; /* Light Gray */
-    background-color: #4d4d4d; /* Grey for digit buttons */
+    color: #f0f0f0;
+    background-color: #4d4d4d;
 }
 
 .btn:active {
     filter: brightness(0.8);
     transform: scale(0.95);
-    background-color: #c90000; /* Deeper Red for active state */
+    background-color: #c90000;
 }
 
 .btn:hover {
-    filter: brightness(1.05);
+    filter: brightness(1.2);
 }
 
 .btn:nth-child(17) {
@@ -79,17 +85,17 @@ h1 {
 }
 
 .btn-pink {
-    background-color: #ff2a68; /* Neon Pink */
+    background-color: #ff2a68;
 }
 
 .btn-cyan {
-    background-color: #00bcd4; /* Neon Cyan */
+    background-color: #00bcd4;
 }
 
 .btn-red {
-    background-color: #c90000; /* Deeper Red */
+    background-color: #c90000;
 }
 
 .btn-clicked {
-    color: #ffffff; /* White */
+    color: #ffffff;
 }
