@@ -40,6 +40,7 @@ h1 {
     color: #f0f0f0;
     border-top-left-radius: 10px; /* Round top left corner */
     border-top-right-radius: 10px; /* Round top right corner */
+    overflow: hidden;
 }
 
 .btn-grid {
@@ -98,4 +99,19 @@ h1 {
 
 .btn-clicked {
     color: #ffffff;
+}
+
+
+@media (max-width: 500px) {
+    .calculator-container {
+        max-width: 300px;
+    }
+
+    .btn {
+        padding: 10px;
+    }
+
+    .numbers-display {
+        height: 80px;
+    }
 }
