@@ -4,8 +4,10 @@ let secondOperand;
 let currentOperator;
 let currentDisplayValue = '0'; // Initial display value
 let operatorSet = false; // Track if an operator was set
-let secondNumberSet = false;
+let secondNumberSet = false; // Track if the second number has been set
 let resultCalculated = false; // Track if a result was calculated
+
+// DOM Elements
 const digits = document.querySelectorAll('.digit-builder');
 const output = document.getElementById('output');
 const clearButton = document.querySelector('.clearButton');
@@ -16,8 +18,7 @@ const equalSign = document.querySelector('.equalSign');
 function speakText(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.pitch = 0.7;
-    utterance.rate = 1.7;
-    utterance.lang = 'ru-RU'; // Set the language to Russian
+    utterance.rate = 1.5;
     window.speechSynthesis.speak(utterance);
 }
 
@@ -32,7 +33,7 @@ function calculate(a, b, operator) {
             return a * b;
         case "/":
             if (b === 0) {
-                speakText('Так низя, лопух.'); // Prevent division by zero
+                speakText('Not today, chump?'); // Insert his speech here
                 return null;
             }
             return a / b;
@@ -50,8 +51,8 @@ function updateDisplay(value) {
 
 // Clear display function
 function clearDisplay() {
-    currentDisplayValue = '0'; // Reset display value
-    updateDisplay(currentDisplayValue); // Update the display
+    currentDisplayValue = '0';
+    updateDisplay(currentDisplayValue);
     // Reset flags
     operatorSet = false;
     secondNumberSet = false;
@@ -82,13 +83,17 @@ function addDecimal() {
 
 // Update the display number based on user input
 function updateDisplayValue(digit) {
+    // If the last operation resulted in a value, start a new operation
     if (resultCalculated) {
-        currentDisplayValue = digit; // Start new operation if a digit is pressed after a result
-        resultCalculated = false;
-        firstOperand = undefined;
+        currentDisplayValue = digit; // Set display to the new digit
+        resultCalculated = false; // Reset the result flag
+        firstOperand = undefined; // Clear the first operand
     } else {
-        currentDisplayValue = (currentDisplayValue === '0') ? digit : currentDisplayValue + digit; // Concatenate clicked digit
+        // Concatenate the clicked digit to the display
+        currentDisplayValue = (currentDisplayValue === '0') ? digit : currentDisplayValue + digit;
     }
+
+    // Update the display with the new value
     updateDisplay(currentDisplayValue);
 }
 
@@ -111,19 +116,33 @@ function handlePercentage() {
     resultCalculated = true; // Set flag that result has been calculated
 }
 
+// Function to handle updating the operands and calculation
+function updateOperandsAndCalculate() {
+    secondOperand = parseFloat(currentDisplayValue);
+    const result = calculate(firstOperand, secondOperand, currentOperator);
+    currentDisplayValue = result.toString(); // Update display with result
+    updateDisplay(currentDisplayValue); // Show the result
+    firstOperand = result; // Use the result as the new first operand
+}
+
 // Handle operator setting
 function setOperator(operator) {
     if (resultCalculated) {
+        // If we already calculated a result, set the first operand to the result
         firstOperand = parseFloat(currentDisplayValue);
         resultCalculated = false;
-    } else if (!operatorSet) {
+    } else if (operatorSet) {
+        // If an operator was already set, we need to calculate the current operation first
+        updateOperandsAndCalculate();
+    } else {
+        // Set the first operand if no operator is set
         firstOperand = parseFloat(currentDisplayValue);
     }
 
-    currentOperator = operator;
+    currentOperator = operator; // Update the operator
     updateDisplay(currentDisplayValue);
     operatorSet = true;
-    secondNumberSet = false;
+    secondNumberSet = false; // Reset the second number flag
 }
 
 // Main function to handle operator input
