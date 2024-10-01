@@ -1,11 +1,14 @@
 // Global Variables
-let number1;
-let number2;
-let operator;
+let stringNumber1;
+let stringNumber2;
+let stringOperator;
 let displayNumber = '0'; // Initial display value
+let isOperatorSet = false; //Track if operator was set after assigning first number
+let isSecondNumberSet = false;
 const digits = document.querySelectorAll('.digit-builder');
 const output = document.getElementById('output'); // Output element for displaying numbers
 const clearButton = document.querySelector('.clearButton');
+const operatorButton = document.querySelectorAll('.operatorButton');
 
 // Function to speak the text
 function speakText(text) {
@@ -97,7 +100,23 @@ digits.forEach(digitElement => {
 });
 clearButton.addEventListener('click', clearDisplay);
 
+operatorButton.forEach(button => {
+    button.addEventListener('click', function() {
+        // Assign the current display value to stringNumber1
+        if (!isOperatorSet) {
+            stringNumber1 = parseFloat(displayNumber); // Convert string to number
+            isOperatorSet = true;
+        }
+        stringOperator = button.innerText; // Set the operator
 
+        console.log("First Number:", stringNumber1);
+        console.log("Operator:", stringOperator);
+
+        // Reset displayNumber for the second number
+        displayNumber = '0';
+        displayResult(displayNumber); // Clear the display for the second number
+    });
+});
 
 /*
 1. When I press the button on the calculator the number is displayed on
