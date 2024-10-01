@@ -1,21 +1,23 @@
 // Global Variables
-let stringNumber1;
-let stringNumber2;
-let stringOperator;
-let displayNumber = '0'; // Initial display value
-let isOperatorSet = false; //Track if operator was set after assigning first number
-let isSecondNumberSet = false;
+let firstOperand;
+let secondOperand;
+let currentOperator;
+let currentDisplayValue = '0'; // Initial display value
+let operatorSet = false; // Track if an operator was set
+let secondNumberSet = false;
+let resultCalculated = false; // Track if a result was calculated
 const digits = document.querySelectorAll('.digit-builder');
-const output = document.getElementById('output'); // Output element for displaying numbers
+const output = document.getElementById('output');
 const clearButton = document.querySelector('.clearButton');
-const operatorButton = document.querySelectorAll('.operatorButton');
+const operatorButtons = document.querySelectorAll('.operatorButton');
 const equalSign = document.querySelector('.equalSign');
 
 // Function to speak the text
 function speakText(text) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.pitch = 1;
-    utterance.rate = 1.5;
+    utterance.pitch = 0.7;
+    utterance.rate = 1.7;
+    utterance.lang = 'ru-RU'; // Set the language to Russian
     window.speechSynthesis.speak(utterance);
 }
 
@@ -30,135 +32,164 @@ function calculate(a, b, operator) {
             return a * b;
         case "/":
             if (b === 0) {
-                speakText('Not today, chump'); // Prevent division by zero
+                speakText('Так низя, лопух.'); // Prevent division by zero
                 return null;
             }
             return a / b;
         case "%":
-            return a % b;
+            return a / 100; // Return percentage of a
         default:
             throw new Error("Invalid operator");
     }
 }
 
-// Main functions:
-function displayResult(input) {
-    output.textContent = input; // Update the displayed result in output div
-}
-displayResult(displayNumber); // Display the starting 0 of the calculator.
-
-// Update and limit the display to 9 digits
-function limitDisplayDigits() {
-    displayResult(displayNumber.slice(0, 9));
+// Function to update the display
+function updateDisplay(value) {
+    output.textContent = value.slice(0, 9); // Limit display to 9 characters
 }
 
-// Clear display function for the AC button
+// Clear display function
 function clearDisplay() {
-    displayNumber = '0'; // Reset display number to '0'
-    displayResult(displayNumber); // Update the display
+    currentDisplayValue = '0'; // Reset display value
+    updateDisplay(currentDisplayValue); // Update the display
+    // Reset flags
+    operatorSet = false;
+    secondNumberSet = false;
+    resultCalculated = false;
+    firstOperand = undefined;
+    secondOperand = undefined;
 }
 
 // Toggle the sign of the displayed number
 function toggleSign() {
-    if (displayNumber !== '0') {
-        displayNumber = displayNumber.startsWith('-') ?
-            displayNumber.slice(1) :
-            '-' + displayNumber; // Toggle the sign
+    if (currentDisplayValue !== '0') {
+        currentDisplayValue = currentDisplayValue.startsWith('-') ?
+            currentDisplayValue.slice(1) :
+            '-' + currentDisplayValue;
     }
-    limitDisplayDigits(); // Update the display
+    updateDisplay(currentDisplayValue);
 }
 
-// Add a period for displayed number
-function addPeriod() {
-    if (displayNumber === '0') {
-        displayNumber = '0.';
-    } else if (!displayNumber.includes('.')) {
-        displayNumber += '.'; // Add period if it does not already exist
+// Add a decimal point to the displayed number
+function addDecimal() {
+    if (currentDisplayValue === '0') {
+        currentDisplayValue = '0.';
+    } else if (!currentDisplayValue.includes('.')) {
+        currentDisplayValue += '.'; // Add period if it does not already exist
     }
-    limitDisplayDigits();
+    updateDisplay(currentDisplayValue);
 }
 
 // Update the display number based on user input
-function updateDisplayNumber(digit) {
-    displayNumber = (displayNumber === '0') ? digit : displayNumber + digit; // Concatenate clicked digit
-    limitDisplayDigits(); // Update and limit the number on display to 9 digits
+function updateDisplayValue(digit) {
+    if (resultCalculated) {
+        currentDisplayValue = digit; // Start new operation if a digit is pressed after a result
+        resultCalculated = false;
+        firstOperand = undefined;
+    } else {
+        currentDisplayValue = (currentDisplayValue === '0') ? digit : currentDisplayValue + digit; // Concatenate clicked digit
+    }
+    updateDisplay(currentDisplayValue);
 }
 
 // Handle digit button clicks
-function digitBuilder(digitElement) {
+function handleDigitInput(digitElement) {
     if (digitElement.innerText === '+/-') {
         toggleSign();
     } else if (digitElement.innerText === '.') {
-        addPeriod();
+        addDecimal();
     } else {
-        updateDisplayNumber(digitElement.innerText);
+        updateDisplayValue(digitElement.innerText);
     }
+}
+
+// Handle percentage calculation
+function handlePercentage() {
+    firstOperand = parseFloat(currentDisplayValue);
+    currentDisplayValue = (firstOperand / 100).toString(); // Calculate percentage
+    updateDisplay(currentDisplayValue); // Display the result
+    resultCalculated = true; // Set flag that result has been calculated
+}
+
+// Handle operator setting
+function setOperator(operator) {
+    if (resultCalculated) {
+        firstOperand = parseFloat(currentDisplayValue);
+        resultCalculated = false;
+    } else if (!operatorSet) {
+        firstOperand = parseFloat(currentDisplayValue);
+    }
+
+    currentOperator = operator;
+    updateDisplay(currentDisplayValue);
+    operatorSet = true;
+    secondNumberSet = false;
+}
+
+// Main function to handle operator input
+function handleOperatorInput(operator) {
+    if (operator === "%") {
+        handlePercentage(); // Handle percentage calculation
+    } else {
+        setOperator(operator); // Set the operator
+    }
+}
+
+// Handle digit button clicks for the second operand
+function handleDigitButtonClick(digitElement) {
+    if (operatorSet && !secondNumberSet) {
+        currentDisplayValue = digitElement.innerText;
+        secondNumberSet = true;
+        updateDisplay(currentDisplayValue);
+    } else {
+        handleDigitInput(digitElement);
+    }
+
+    if (operatorSet && secondNumberSet) {
+        secondOperand = parseFloat(currentDisplayValue);
+    }
+}
+
+// Function to handle the calculation result
+function handleCalculationResult(result) {
+    if (result !== null) {
+        currentDisplayValue = result.toString(); // Convert the result to a string
+        updateDisplay(currentDisplayValue);
+    } else {
+        updateDisplay('..........'); // Display an error message
+        currentDisplayValue = '0'; // Reset the display number
+    }
+}
+
+// Reset calculator state
+function resetCalculatorState() {
+    firstOperand = undefined;
+    secondOperand = undefined;
+    operatorSet = false;
+    secondNumberSet = false;
+    resultCalculated = true;
 }
 
 // Event listeners
 clearButton.addEventListener('click', clearDisplay);
-operatorButton.forEach(button => {
+
+operatorButtons.forEach(button => {
     button.addEventListener('click', function() {
-        // Assign the current display value to stringNumber1 if no operator is set
-        if (!isOperatorSet) {
-            stringNumber1 = parseFloat(displayNumber); // Convert string to number
-            isOperatorSet = true; // Now operator is set
-        }
-
-        stringOperator = button.innerText; // Set the operator
-
-        console.log("First Number:", stringNumber1);
-        console.log("Operator:", stringOperator);
-
-        // Reset displayNumber for inputting the second number
-        displayNumber = '0';
-        displayResult(displayNumber); // Clear the display for the second number
+        handleOperatorInput(button.innerText);
     });
 });
 
-// Event listener for digit buttons
 digits.forEach(digitElement => {
     digitElement.addEventListener('click', function() {
-        // If the operator is already set, build the second number
-        if (isOperatorSet && !isSecondNumberSet) {
-            displayNumber = digitElement.innerText;
-            isSecondNumberSet = true;
-        } else {
-            digitBuilder(digitElement); // This will handle updating the display
-        }
-
-        // Once both numbers and the operator are set, you can now handle calculations
-        if (isOperatorSet && isSecondNumberSet) {
-            stringNumber2 = parseFloat(displayNumber);
-            console.log("Second Number:", stringNumber2);
-
-            // Now you can call the calculate function when needed (such as on '=')
-            // const result = calculate(stringNumber1, stringNumber2, stringOperator);
-            // displayResult(result); // Show the result in the display
-        }
+        handleDigitButtonClick(digitElement);
     });
 });
 
-
-
-
-
-
-
-/*
-1. When I press the button on the calculator the number is displayed on
- the display instead of 0. Done.
-2. After I press on the operator button it remains visually pressed.
-the first number on the display is assigned to number1 and operator
-is assigned to operator
-3.When I press the second number the first number dissapears from the display
-the second number takes its place there, also the operator no longer visually
- pressed
-*After I press = the second number dissapears it is assigned to number2
- and calculation function is initiated
-* the result is displayed on the screen
-* if I press another operator the number on the display(previous result)
- will be assigned as number1
- */
-
-// Display numbers and initial 0 string.
+equalSign.addEventListener('click', function() {
+    if (firstOperand !== undefined && secondOperand !== undefined && currentOperator) {
+        const result = calculate(firstOperand, secondOperand, currentOperator);
+        handleCalculationResult(result);
+        firstOperand = result;
+        resetCalculatorState();
+    }
+});
