@@ -9,6 +9,7 @@ const digits = document.querySelectorAll('.digit-builder');
 const output = document.getElementById('output'); // Output element for displaying numbers
 const clearButton = document.querySelector('.clearButton');
 const operatorButton = document.querySelectorAll('.operatorButton');
+const equalSign = document.querySelector('.equalSign');
 
 // Function to speak the text
 function speakText(text) {
@@ -95,28 +96,54 @@ function digitBuilder(digitElement) {
 }
 
 // Event listeners
-digits.forEach(digitElement => {
-    digitElement.addEventListener('click', () => digitBuilder(digitElement)); // Handle click
-});
 clearButton.addEventListener('click', clearDisplay);
-
 operatorButton.forEach(button => {
     button.addEventListener('click', function() {
-        // Assign the current display value to stringNumber1
+        // Assign the current display value to stringNumber1 if no operator is set
         if (!isOperatorSet) {
             stringNumber1 = parseFloat(displayNumber); // Convert string to number
-            isOperatorSet = true;
+            isOperatorSet = true; // Now operator is set
         }
+
         stringOperator = button.innerText; // Set the operator
 
         console.log("First Number:", stringNumber1);
         console.log("Operator:", stringOperator);
 
-        // Reset displayNumber for the second number
+        // Reset displayNumber for inputting the second number
         displayNumber = '0';
         displayResult(displayNumber); // Clear the display for the second number
     });
 });
+
+// Event listener for digit buttons
+digits.forEach(digitElement => {
+    digitElement.addEventListener('click', function() {
+        // If the operator is already set, build the second number
+        if (isOperatorSet && !isSecondNumberSet) {
+            displayNumber = digitElement.innerText;
+            isSecondNumberSet = true;
+        } else {
+            digitBuilder(digitElement); // This will handle updating the display
+        }
+
+        // Once both numbers and the operator are set, you can now handle calculations
+        if (isOperatorSet && isSecondNumberSet) {
+            stringNumber2 = parseFloat(displayNumber);
+            console.log("Second Number:", stringNumber2);
+
+            // Now you can call the calculate function when needed (such as on '=')
+            // const result = calculate(stringNumber1, stringNumber2, stringOperator);
+            // displayResult(result); // Show the result in the display
+        }
+    });
+});
+
+
+
+
+
+
 
 /*
 1. When I press the button on the calculator the number is displayed on
