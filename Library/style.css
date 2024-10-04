@@ -1,0 +1,141 @@
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Base body styles */
+body {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #EAEAEA;
+    background-color: #2D2D2D;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #F1C40F;
+}
+
+/* Paragraph styles */
+p {
+    margin-bottom: 1.5rem;
+}
+
+/* Image responsiveness */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Form Control Styling */
+input, select, textarea, button {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding: 10px;
+    border: 1px solid #4E4E4E;
+    border-radius: 4px;
+    background-color: #3C3C3C;
+    color: #EAEAEA;
+}
+
+.form {
+    max-width: 220px;
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.checkbox-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.checkbox-control input {
+    margin: 0;
+}
+
+
+.checkbox-control label {
+    margin-bottom: 0;
+    margin-right: 5px;
+}
+
+.addBookForm {
+    max-width: 220px;
+    background-color: #4A4A4A;
+    position: fixed;
+    margin-bottom: auto;
+    margin-top: auto;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+main {
+    position: relative;
+    padding-left: 220px;
+}
+
+.libraryHeading {
+    text-align: center;
+    background-color: #3A3A3A;
+    padding: 1rem;
+    color: #F1C40F;
+}
+
+/* Book Display Area */
+.bookDisplayArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem;
+    background-color: #3E3E3E;
+}
+
+/* Book Card Styles */
+.bookCard {
+    background-color: #4E4E4E;
+    border: 1px solid #6C757D;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    min-width: 200px;
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.bookCard:hover {
+    transform: translateY(-5px);
+}
+
+
+.bookCard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #F39C12;
+}
+
+.bookCard p {
+    margin: 0.5rem 0;
+    color: #D0D0D0;
+}
+
+.backgroundContainer {
+    background-color: #2D2D2D;
+    height: 100vh;
+}
+
+
