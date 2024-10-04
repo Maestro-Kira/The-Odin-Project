@@ -138,4 +138,57 @@ main {
     height: 100vh;
 }
 
+/* Remove Button Styles */
+.removeBtn {
+    padding: 10px 12px;
+    background-color: #F1C40F;
+    border: none;
+    border-radius: 4px;
+    color: #2D2D2D;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    outline: none;
+    width: 100%;
+}
 
+.removeBtn:hover {
+    background-color: #D4AC0D;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.removeBtn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* General button reset (if needed) */
+button {
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+}
+
+
+@media only screen and (max-width: 777px) {
+    main {
+        padding-left: 0;
+    }
+
+    .addBookForm {
+        display: flex;
+        justify-content: center;
+        position: static;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .bookCard {
+        max-width: 200px;
+    }
+
+    .removeBtn {
+        padding: 7px 10px;
+        width: 90%;
+    }
+}
