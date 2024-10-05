@@ -6,16 +6,18 @@ const bookArea = document.getElementById('bookDisplayArea');
 function loadLibraryFromStorage() {
     const storedLibrary = localStorage.getItem('library');
     if (storedLibrary) {
-        Library = JSON.parse(storedLibrary); // Parse the stored JSON string back into an array
+        Library = JSON.parse(storedLibrary).map(bookData =>
+            new Book(bookData.title, bookData.status, bookData.author, bookData.pagesAmount, bookData.genre)
+        );
     }
 }
 
 // Save library to localStorage
 function saveLibraryToStorage() {
-    localStorage.setItem('library', JSON.stringify(Library)); // Convert the Library array to a JSON string and save it
+    localStorage.setItem('library', JSON.stringify(Library));
 }
 
-// Book class and functions remain the same
+// Book class and functions
 class Book {
     constructor(title, status, author, pagesAmount, genre) {
         this.title = title;
@@ -23,6 +25,14 @@ class Book {
         this.author = author;
         this.pagesAmount = pagesAmount;
         this.genre = genre;
+    }
+
+    toggleReadStatus() {
+        // Define the possible statuses in a cycle
+        const statuses = ['not-started', 'in-progress', 'completed'];
+        const currentIndex = statuses.indexOf(this.status);
+        const nextIndex = (currentIndex + 1) % statuses.length; // Cycle to the next status
+        this.status = statuses[nextIndex]; // Update the book status
     }
 }
 
@@ -47,7 +57,6 @@ function getFormValues() {
     };
 }
 
-// Helper functions
 function capitalizeWord(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
@@ -69,7 +78,6 @@ function getStatusSetColor(status) {
     return { statusText, iconColor };
 }
 
-// Main functions
 function displayBooks() {
     // Remove existing book cards
     while (bookArea.firstChild) {
@@ -128,7 +136,7 @@ function displayBooks() {
     });
 }
 
-// Check for duplicates before adding a book
+// Check for duplicates
 function isDuplicateBook(title) {
     return Library.some(book => book.title.toLowerCase() === title.toLowerCase());
 }
@@ -138,10 +146,10 @@ form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     const formValues = getFormValues();
 
-    // Check if the book already exists
+    // Check for duplicates
     if (isDuplicateBook(formValues.title)) {
         alert('This book already exists in your library.');
-        return; // Do not add the duplicate book
+        return;
     }
 
     let newBook = new Book(formValues.title, formValues.status, formValues.author, formValues.pages, formValues.genre);
@@ -169,15 +177,9 @@ bookArea.addEventListener('click', function (ev) {
         const bookTitle = bookCard.querySelector('h2').textContent.toLowerCase(); // Get the book title
 
         // Find the book in the Library array
-        Library = Library.map(book => {
+        Library.forEach(book => {
             if (book.title.toLowerCase() === bookTitle) {
-                // Define the possible statuses in a cycle
-                const statuses = ['not-started', 'in-progress', 'completed'];
-                const currentIndex = statuses.indexOf(book.status);
-                const nextIndex = (currentIndex + 1) % statuses.length; // Cycle to the next status
-
-                // Update the book status to the next one
-                book.status = statuses[nextIndex];
+                book.toggleReadStatus(); // Call the method to toggle status
 
                 // Update the displayed status text and icon color
                 const { statusText, iconColor } = getStatusSetColor(book.status);
@@ -192,7 +194,6 @@ bookArea.addEventListener('click', function (ev) {
                 const iconElement = statusElement.querySelector('i');
                 iconElement.style.color = iconColor;
             }
-            return book; // Return the updated book object
         });
 
         // Save the updated Library to localStorage
