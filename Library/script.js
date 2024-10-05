@@ -2,6 +2,21 @@ let Library = [];
 const form = document.getElementById('libraryForm');
 const bookArea = document.getElementById('bookDisplayArea');
 
+// Load library from localStorage
+function loadLibraryFromStorage() {
+    const storedLibrary = localStorage.getItem('library');
+    if (storedLibrary) {
+        Library = JSON.parse(storedLibrary); // Parse the stored JSON string back into an array
+    }
+}
+
+// Save library to localStorage
+function saveLibraryToStorage() {
+    localStorage.setItem('library', JSON.stringify(Library)); // Convert the Library array to a JSON string and save it
+}
+
+
+// Book class and functions remain the same
 class Book {
     constructor(title, status, author, pagesAmount, genre) {
         this.title = title;
@@ -14,6 +29,7 @@ class Book {
 
 function addBookToLibrary(book) {
     Library.push(book);
+    saveLibraryToStorage(); // Save to localStorage after adding
 }
 
 function getFormValues() {
@@ -136,6 +152,13 @@ bookArea.addEventListener('click', function (ev) {
 
         // Remove the book from the Library array
         Library = Library.filter(book => book.title.toLowerCase() !== bookTitle);
+        saveLibraryToStorage(); // Save to localStorage after removing
         bookArea.removeChild(bookCard);
     }
+});
+
+// Call displayBooks to show any existing books from localStorage when the page loads
+window.addEventListener('load', () => {
+    loadLibraryFromStorage();
+    displayBooks();
 });
