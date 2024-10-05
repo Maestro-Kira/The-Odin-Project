@@ -119,6 +119,11 @@ function displayBooks() {
         removeButton.textContent = 'Remove Book';
         bookCard.appendChild(removeButton);
 
+        const updateStatusButton = document.createElement('button');
+        updateStatusButton.classList.add('updateBtn');
+        updateStatusButton.textContent = 'Update';
+        bookCard.appendChild(updateStatusButton);
+
         bookArea.appendChild(bookCard);
     });
 }

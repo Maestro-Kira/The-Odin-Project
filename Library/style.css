@@ -139,6 +139,7 @@ main {
     min-width: 200px;
     text-align: left;
     transition: transform 0.2s;
+    overflow: hidden;
 }
 
 .bookCard:hover {
@@ -163,7 +164,7 @@ main {
 }
 
 /* Remove Button Styles */
-.removeBtn {
+.removeBtn, .updateBtn {
     padding: 10px 12px;
     background-color: #F1C40F;
     border: none;
@@ -176,14 +177,37 @@ main {
     width: 100%;
 }
 
-.removeBtn:hover {
+.removeBtn:hover, .updateBtn:hover {
     background-color: #D4AC0D;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.removeBtn:active {
+.removeBtn:active, .updateBtn:active {
     transform: translateY(2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.updateBtn {
+background-color: #fd7e14;
+    margin-top: 1rem;
+}
+
+.updateBtn {
+    background-color: #218838; /* or your chosen background color */
+    color: #ffffff; /* text color */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.updateBtn:hover {
+    background-color: #218838;
+}
+
+.updateBtn:active {
+    background-color: #1e7e34;
 }
 
 /* General button reset (if needed) */
@@ -218,7 +242,7 @@ button {
         font-size: 1rem;
     }
 
-    .removeBtn {
+    .removeBtn .updateBtn {
         padding: 7px 10px;
         width: 90%;
         font-size: 0.8rem;
