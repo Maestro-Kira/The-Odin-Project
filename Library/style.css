@@ -77,22 +77,29 @@ input, select, textarea, button {
     margin-top: auto;
     top: 0;
     left: 0;
+    transform: translateX(-600px);
     height: 100vh;
     padding: 1rem;
     text-align: center;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
 }
 
 main {
     position: relative;
-    padding-left: 220px;
+
 }
 
 .libraryHeading {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
     text-align: center;
     background-color: #3A3A3A;
     padding: 1rem;
     color: #F1C40F;
+
 }
 
 /* Form Button Styles */
@@ -104,7 +111,7 @@ main {
     color: #2D2D2D;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     outline: none;
     width: 100%;
 }
@@ -117,6 +124,17 @@ main {
 .form-control button:active {
     transform: translateY(2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.closeForm {
+    background: none;
+    border: none;
+    color: #f1c40f;
+    font-size: 2rem;
+    cursor: pointer;
+    position: absolute;
+    top: -16px;
+    right: 0;
 }
 
 /* Book Display Area */
@@ -210,6 +228,12 @@ background-color: #fd7e14;
     background-color: #1e7e34;
 }
 
+.addBtnMobile {
+    display: none;
+}
+
+
+
 /* General button reset (if needed) */
 button {
     font-family: inherit;
@@ -218,35 +242,3 @@ button {
 }
 
 /*Media Query*/
-
-@media only screen and (max-width: 777px) {
-    main {
-        padding-left: 0;
-    }
-
-    .addBookForm {
-        display: flex;
-        justify-content: center;
-        position: static;
-        max-width: 100%;
-        height: auto;
-    }
-
-    .bookCard {
-        max-width: 200px;
-    }
-
-    .bookCard h2 {
-        font-size: 1rem;
-    }
-
-    .removeBtn .updateBtn {
-        padding: 7px 10px;
-        width: 90%;
-        font-size: 0.8rem;
-    }
-
-    .bookCard:hover {
-        transform: none;
-    }
-}

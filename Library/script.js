@@ -1,7 +1,10 @@
 let Library = [];
 const form = document.getElementById('libraryForm');
 const bookArea = document.getElementById('bookDisplayArea');
-
+const addBookForm = document.getElementById('addBookForm');
+const closeFormButton = document.querySelector('.closeForm');
+const addButton = document.querySelector('.addBtn');
+const main = document.getElementById('main');
 // Load library from localStorage
 function loadLibraryFromStorage() {
     const storedLibrary = localStorage.getItem('library');
@@ -195,11 +198,25 @@ bookArea.addEventListener('click', function (ev) {
                 iconElement.style.color = iconColor;
             }
         });
-
         // Save the updated Library to localStorage
         saveLibraryToStorage();
     }
 });
+
+
+// Event listener for the close button
+addButton.addEventListener('click', function (ev) {
+    main.style.paddingLeft = '220px'
+    addBookForm.style.transform = 'translateX(0)';
+    addButton.style.display = 'none';
+})
+
+closeFormButton.addEventListener('click', function (ev) {
+    main.style.paddingLeft = '0'
+    addBookForm.style.transform = 'translateX(-600px)';
+    addButton.style.display = 'block';
+})
+
 
 // Call displayBooks to show any existing books from localStorage when the page loads
 window.addEventListener('load', () => {
