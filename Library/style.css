@@ -95,6 +95,30 @@ main {
     color: #F1C40F;
 }
 
+/* Form Button Styles */
+.form-control button {
+    padding: 10px 12px;
+    background-color: #F1C40F;
+    border: none;
+    border-radius: 4px;
+    color: #2D2D2D;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    outline: none;
+    width: 100%;
+}
+
+.form-control button:hover {
+    background-color: #D4AC0D;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-control button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 /* Book Display Area */
 .bookDisplayArea {
     display: flex;
@@ -170,6 +194,9 @@ button {
 }
 
 
+
+/*Media Query*/
+
 @media only screen and (max-width: 777px) {
     main {
         padding-left: 0;
@@ -187,8 +214,17 @@ button {
         max-width: 200px;
     }
 
+    .bookCard h2 {
+        font-size: 1rem;
+    }
+
     .removeBtn {
         padding: 7px 10px;
         width: 90%;
+        font-size: 0.8rem;
+    }
+
+    .bookCard:hover {
+        transform: none;
     }
 }
