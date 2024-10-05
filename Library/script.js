@@ -15,7 +15,6 @@ function saveLibraryToStorage() {
     localStorage.setItem('library', JSON.stringify(Library)); // Convert the Library array to a JSON string and save it
 }
 
-
 // Book class and functions remain the same
 class Book {
     constructor(title, status, author, pagesAmount, genre) {
@@ -119,6 +118,7 @@ function displayBooks() {
         removeButton.textContent = 'Remove Book';
         bookCard.appendChild(removeButton);
 
+        // Create the update button
         const updateStatusButton = document.createElement('button');
         updateStatusButton.classList.add('updateBtn');
         updateStatusButton.textContent = 'Update';
@@ -159,6 +159,44 @@ bookArea.addEventListener('click', function (ev) {
         Library = Library.filter(book => book.title.toLowerCase() !== bookTitle);
         saveLibraryToStorage(); // Save to localStorage after removing
         bookArea.removeChild(bookCard);
+    }
+});
+
+// Event delegation for status change
+bookArea.addEventListener('click', function (ev) {
+    if (ev.target.classList.contains('updateBtn')) {
+        const bookCard = ev.target.closest('.bookCard');
+        const bookTitle = bookCard.querySelector('h2').textContent.toLowerCase(); // Get the book title
+
+        // Find the book in the Library array
+        Library = Library.map(book => {
+            if (book.title.toLowerCase() === bookTitle) {
+                // Define the possible statuses in a cycle
+                const statuses = ['not-started', 'in-progress', 'completed'];
+                const currentIndex = statuses.indexOf(book.status);
+                const nextIndex = (currentIndex + 1) % statuses.length; // Cycle to the next status
+
+                // Update the book status to the next one
+                book.status = statuses[nextIndex];
+
+                // Update the displayed status text and icon color
+                const { statusText, iconColor } = getStatusSetColor(book.status);
+
+                // Find the status <p> element (without the class)
+                const statusElement = bookCard.querySelector('p'); // First <p> assumed to be the status
+
+                // Update the status text without removing the <i> tag
+                statusElement.firstChild.textContent = statusText; // Update text content
+
+                // Update the icon color
+                const iconElement = statusElement.querySelector('i');
+                iconElement.style.color = iconColor;
+            }
+            return book; // Return the updated book object
+        });
+
+        // Save the updated Library to localStorage
+        saveLibraryToStorage();
     }
 });
 
