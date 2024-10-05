@@ -1,7 +1,7 @@
 let Library = [];
 const form = document.getElementById('libraryForm');
-const removeBtn = document.querySelector('.removeBtn');
-const bookArea = document.getElementById('bookDisplayArea')
+const bookArea = document.getElementById('bookDisplayArea');
+
 class Book {
     constructor(title, status, author, pagesAmount, genre) {
         this.title = title;
@@ -13,19 +13,15 @@ class Book {
 }
 
 function addBookToLibrary(book) {
-    return Library.push(book);
-}
-
-function shiftLibraryArray(){
-    return Library.shift();
+    Library.push(book);
 }
 
 function getFormValues() {
-    const bookTitle = document.getElementById('bookTitle').value;
+    const bookTitle = document.getElementById('bookTitle').value.trim();
     const bookStatus = document.getElementById('bookStatus').value;
-    const bookAuthor = document.getElementById('bookAuthor').value;
-    const pagesAmount = document.getElementById('pagesAmount').value;
-    const genre = document.getElementById('bookGenre').value;
+    const bookAuthor = document.getElementById('bookAuthor').value.trim();
+    const pagesAmount = document.getElementById('pagesAmount').value.trim();
+    const genre = document.getElementById('bookGenre').value.trim();
 
     return {
         title: bookTitle,
@@ -35,6 +31,7 @@ function getFormValues() {
         genre: genre,
     };
 }
+
 // Helper functions
 function capitalizeWord(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -59,10 +56,12 @@ function getStatusSetColor(status) {
 
 // Main functions
 function displayBooks() {
-    const bookArea = document.getElementById('bookDisplayArea');
+    // Remove existing book cards
+    while (bookArea.firstChild) {
+        bookArea.removeChild(bookArea.firstChild);
+    }
 
     Library.forEach(book => {
-
         // Create a new book card div
         const bookCard = document.createElement('div');
         bookCard.classList.add('bookCard');
@@ -72,8 +71,8 @@ function displayBooks() {
         titleElement.textContent = capitalizeWord(book.title);
         bookCard.appendChild(titleElement);
 
-        //Create status and set icon color based on its type.
-        const { statusText, iconColor} = getStatusSetColor(book.status);
+        // Create status and set icon color based on its type.
+        const { statusText, iconColor } = getStatusSetColor(book.status);
         const statusElement = document.createElement('p');
         statusElement.textContent = statusText;
 
@@ -108,21 +107,35 @@ function displayBooks() {
     });
 }
 
+// Check for duplicates before adding a book
+function isDuplicateBook(title) {
+    return Library.some(book => book.title.toLowerCase() === title.toLowerCase());
+}
+
 // Event listeners
-form.addEventListener('submit', function(ev) {
+form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     const formValues = getFormValues();
+
+    // Check if the book already exists
+    if (isDuplicateBook(formValues.title)) {
+        alert('This book already exists in your library.');
+        return; // Do not add the duplicate book
+    }
+
     let newBook = new Book(formValues.title, formValues.status, formValues.author, formValues.pages, formValues.genre);
     addBookToLibrary(newBook);
     displayBooks();
-    shiftLibraryArray()
 });
 
-
-bookArea.addEventListener('click', function(ev) {
+// Event delegation for removing books
+bookArea.addEventListener('click', function (ev) {
     if (ev.target.classList.contains('removeBtn')) {
         const bookCard = ev.target.closest('.bookCard');
-        bookArea.removeChild(bookCard)
-    }
-})
+        const bookTitle = bookCard.querySelector('h2').textContent.toLowerCase();
 
+        // Remove the book from the Library array
+        Library = Library.filter(book => book.title.toLowerCase() !== bookTitle);
+        bookArea.removeChild(bookCard);
+    }
+});
